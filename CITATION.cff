@@ -1,0 +1,14 @@
+cff-version: 0.0.0
+message: "If you use this software, please cite it as below."
+authors:
+- family-names: "Girouard"
+  given-names: "Vincent"
+  orcid:
+- family-names: "Quesada"
+  given-names: "Nicolás"
+  orcid: "https://orcid.org/0000-0002-0175-1688"
+title: "Unitary-Decomp"
+version: 0.0.0
+doi: 10.1364/JOSAB.577579
+date-released: 2025-08-28
+url: "https://github.com/polyquantique/Unitary-Decomp"
