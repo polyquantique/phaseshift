@@ -253,10 +253,15 @@ Transforms and Phase Masks](papers/LPLM_algorithm_derivation.pdf)
 If you find our research useful in your work, please cite it as
 ```
 @article{girouard2025,
-  title={Near-optimal decomposition of unitary matrices using phase masks and the discrete Fourier transform},
-  author={Girouard, Vincent and Quesada, Nicol{\'a}s},
-  journal={arXiv preprint arXiv:2508.20010},
-  year={2025}
+author = {Vincent Girouard and Nicol\'{a}s Quesada},
+journal = {J. Opt. Soc. Am. B},
+number = {3},
+pages = {A66--A73},
+title = {Near-optimal decomposition of unitary matrices using phase masks and the discrete Fourier transform},
+volume = {43},
+year = {2026},
+url = {https://opg.optica.org/josab/abstract.cfm?URI=josab-43-3-A66},
+doi = {10.1364/JOSAB.577579}
 }
 ```
 
@@ -266,7 +271,7 @@ This project is licensed under the Apache License 2.0. See the [LICENSE](LICENSE
 
 ## References
 
-- Girouard, Vincent, Nicolas, Quesada. "Near-optimal decomposition of unitary matrices using phase masks and the discrete Fourier transform". arXiv preprint arXiv:2508.20010. (2025).
+- Girouard, Vincent, Nicolas, Quesada. "Near-optimal decomposition of unitary matrices using phase masks and the discrete Fourier transform". JOSA B Vol. 43, Issue 3, (2026): A66-A73 
 
 - Clements, William R., et al. "Optimal design for universal multiport interferometers." Optica 3.12 (2016): 1460-1465.
 
