@@ -35,10 +35,7 @@ __version__ = "1.0.0"
 
 from udecomp.bell_interferometer import bell_decomposition
 from udecomp.clements_interferometer import clements_decomposition, mzi_decomposition
-from udecomp.fourier_interferometer import (
-    compact_fourier_decomposition,
-    fourier_decomposition,
-)
+from udecomp.fourier_interferometer import compact_fourier_decomposition, fourier_decomposition
 from udecomp.lplm_interferometer import lplm_decomposition
 from udecomp.optimization.fourier_optimizer import mask_optimizer
 from udecomp.optimization.jax_optimizer import jax_mask_optimizer
