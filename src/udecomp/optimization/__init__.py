@@ -22,5 +22,5 @@ The `optimization` subpackage contains two modules:
 - `jax_optimizer`: Uses the `Jax` and `Optax` libraries to find the phase masks that minimize the infidelity with a target unitary efficiently.
 """
 
-from unitary_decomp.optimization.fourier_optimizer import mask_optimizer
-from unitary_decomp.optimization.jax_optimizer import jax_mask_optimizer, scipy_mask_optimizer
+from udecomp.optimization.fourier_optimizer import mask_optimizer
+from udecomp.optimization.jax_optimizer import jax_mask_optimizer, scipy_mask_optimizer

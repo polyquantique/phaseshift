@@ -17,7 +17,7 @@ import pytest
 from scipy.linalg import dft
 from scipy.stats import unitary_group
 
-import unitary_decomp.lplm_interferometer as li
+import udecomp.lplm_interferometer as li
 
 np.random.seed(42)
 

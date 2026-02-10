@@ -17,8 +17,8 @@ import pytest
 from scipy.linalg import dft
 from scipy.stats import unitary_group
 
-import unitary_decomp.fourier_interferometer as fi
-from unitary_decomp import matrix_operations as mo
+import udecomp.fourier_interferometer as fi
+from udecomp import matrix_operations as mo
 
 """Unit tests for the Fourier Interferometer module."""
 

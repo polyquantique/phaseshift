@@ -38,8 +38,8 @@ import numpy as np
 from numpy.typing import NDArray
 from scipy.optimize import basinhopping
 
-from unitary_decomp import matrix_operations as mo
-from unitary_decomp.fourier_interferometer import FourierDecomp
+from udecomp import matrix_operations as mo
+from udecomp.fourier_interferometer import FourierDecomp
 
 
 def fidelity(U: NDArray, V: NDArray) -> float:
@@ -142,8 +142,8 @@ def mask_optimizer(
     Example:
         >>> import numpy as np
         >>> from scipy.stats import unitary_group
-        >>> from unitary_decomp.fourier_interferometer import circuit_reconstruction
-        >>> from unitary_decomp.optimization import mask_optimizer
+        >>> from udecomp.fourier_interferometer import circuit_reconstruction
+        >>> from udecomp.optimization import mask_optimizer
 
         >>> U = unitary_group(dim=6, seed=137).rvs()  # Generate a random 6x6 unitary matrix
         >>> mask_shape = np.array([True, True, True, True, True, False])  # Define the shape of the phase masks with no phase shifter on the last mode

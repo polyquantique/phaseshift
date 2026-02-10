@@ -24,8 +24,8 @@ as a 2D heatmap. It visualizes the distribution of phases across the masks in th
 
     >>> import matplotlib.pyplot as plt
     >>> from scipy.stats import unitary_group
-    >>> from unitary_decomp.plot.phases_plot import plot_phases
-    >>> from unitary_decomp import compact_fourier_decomposition
+    >>> from udecomp.plot.phases_plot import plot_phases
+    >>> from udecomp import compact_fourier_decomposition
 
     >>> # Generate a random unitary matrix
     >>> U = unitary_group(10, seed=42).rvs()
@@ -48,8 +48,8 @@ from typing import Optional
 import matplotlib.pyplot as plt
 import numpy as np
 
-from unitary_decomp.fourier_interferometer import FourierDecomp
-from unitary_decomp.lplm_interferometer import LplmDecomp
+from udecomp.fourier_interferometer import FourierDecomp
+from udecomp.lplm_interferometer import LplmDecomp
 
 
 def _generate_phase_matrix(decomposition: FourierDecomp | LplmDecomp) -> np.ndarray:
@@ -80,8 +80,8 @@ def plot_phases(
 
     Args:
         decomposition (FourierDecomp | LplmDecomp): The decomposition object containing the mask sequence. Can be obtained from
-            `unitary_decomp.fourier_interferometer.compact_fourier_decomposition` or
-            `unitary_decomp.lplm_interferometer.lplm_decomposition`.
+            `udecomp.fourier_interferometer.compact_fourier_decomposition` or
+            `udecomp.lplm_interferometer.lplm_decomposition`.
 
         ax (plt.Axes, optional): The matplotlib Axes object to plot on. If None, a new figure and axes will be created.
 

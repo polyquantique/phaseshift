@@ -17,7 +17,7 @@ import pytest
 from scipy.linalg import dft
 from scipy.stats import unitary_group
 
-from unitary_decomp import bell_interferometer as bi
+from udecomp import bell_interferometer as bi
 
 """Unit tests for the Bell Interferometer module."""
 

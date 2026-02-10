@@ -36,7 +36,7 @@ import optax
 from jax.scipy.optimize import minimize
 from scipy.linalg import dft
 
-from unitary_decomp.fourier_interferometer import FourierDecomp
+from udecomp.fourier_interferometer import FourierDecomp
 
 # Enable 64-bit precision for JAX operations
 jax.config.update("jax_enable_x64", True)
