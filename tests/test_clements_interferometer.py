@@ -17,7 +17,7 @@ import pytest
 from scipy.fft import fft
 from scipy.stats import unitary_group
 
-from udecomp import clements_interferometer as ci
+from unitary_decomp import clements_interferometer as ci
 
 """Unit tests for the Clements interferometer module."""
 

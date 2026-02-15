@@ -17,7 +17,7 @@ import pytest
 from scipy.linalg import dft
 from scipy.stats import unitary_group
 
-from udecomp import matrix_operations as mo
+from unitary_decomp import matrix_operations as mo
 
 """Unit tests for the matrix operations module."""
 

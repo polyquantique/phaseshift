@@ -27,7 +27,7 @@ import numpy as np
 import pandas as pd
 from scipy.stats import linregress, unitary_group
 
-from udecomp.clements_interferometer import circuit_reconstruction, clements_decomposition
+from unitary_decomp.clements_interferometer import circuit_reconstruction, clements_decomposition
 
 
 def fidelity(V: np.ndarray, U: np.ndarray) -> float:

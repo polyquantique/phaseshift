@@ -22,4 +22,4 @@ This subpackage provides plotting modules for visualization and characterization
 - `clements_plot`: Module for the characterization of the Clements decomposition.
 """
 
-from udecomp.plot.phases_plot import plot_phases
+from unitary_decomp.plot.phases_plot import plot_phases
