@@ -35,7 +35,7 @@ Rectangular mesh of Mach–Zehnder interferometers based on the Clements archite
 
 ### Multichannel Component Sequences
 
-This second class of decompositions aims to express an $N \times N$ unitary matrix as a sequence of configurable phase masks interleaved with a multichannel mixing layer, such as the discrete Fourier transform (DFT). Numerical evidence suggests that using $N+1$ layers of phase masks with any dense mixing layer is enough to result in a universal design [(Saygin *et al.*, 2020)](https://doi.org/10.1103/PhysRevLett.124.010501) [(Zelaya *et al.*, 2024)](https://doi.org/10.1038/s41598-024-60700-8). The first constructive design based on this approach was proposed by [López Pastor *et al.*, 2021](https://doi.org/10.1364/OE.432787) and generates a sequence of $6N + 1$ phase masks to implement a $N \times N$ unitary. We improved this design to reach $4N+1$ and $2N+5$ phase masks.
+This second class of decompositions aims to express an $N \times N$ unitary matrix as a sequence of configurable phase masks interleaved with a multichannel mixing layer, such as the discrete Fourier transform (DFT). Numerical evidence suggests that using $N+1$ layers of phase masks with any dense mixing layer is enough to result in a universal design [(Saygin *et al.*, 2020)](https://doi.org/10.1103/PhysRevLett.124.010501) [(Zelaya *et al.*, 2024)](https://doi.org/10.1038/s41598-024-60700-8). The first constructive design based on this approach was proposed by [López Pastor *et al.*, 2021](https://doi.org/10.1364/OE.432787) and generates a sequence of $6N + 1$ phase masks to implement a $N \times N$ unitary. We improved this design to reach $4N+1$ and $2N+5$ phase masks [(Girouard *et al.*, 2026)](https://doi.org/10.1364/JOSAB.577579).
 
 <div align="center">
 Sequence of phase masks interleaved with the discrete Fourier transform mixing layer for 6 modes
@@ -55,7 +55,7 @@ Sequence of phase masks interleaved with the discrete Fourier transform mixing l
 
 - [`lplm_interferometer`](src/phaseshift/lplm_interferometer.py): Implementation of the algorithm by [López Pastor *et al.*, 2021](https://doi.org/10.1364/OE.432787) to decompose $N \times N$ unitary matrices into a sequence of $6N+1$ phase masks interleaved with the **DFT** matrix.
 
-- [`fourier_interferometer`](src/phaseshift/fourier_interferometer.py): Implementation of the **Fourier decomposition** and the **compact Fourier decomposition** to decompose $N \times N$ unitary matrices into sequences of $4N+1$ and $2N+5$ phase masks interleaved with **DFT** respectively.
+- [`fourier_interferometer`](src/phaseshift/fourier_interferometer.py): Implementation of the **Fourier decomposition** and the **compact Fourier decomposition** [(Girouard *et al.*, 2026)](https://doi.org/10.1364/JOSAB.577579) to decompose $N \times N$ unitary matrices into sequences of $4N+1$ and $2N+5$ phase masks interleaved with **DFT** respectively. 
 
 ### Optimization Tools
 
@@ -63,7 +63,9 @@ In addition to exact decompositions, `PhaseShift` also has an `optimization` sub
 
 - [`fourier_optimizer`](src/phaseshift/optimization/fourier_optimizer.py): Uses the basin-hopping algorithm from `scipy.optimize` to solve a global minimization problem, yielding the sequence of phase masks that minimizes the infidelity with respect to a target unitary.
 
-- [`jax_optimizer`](src/phaseshift/optimization/jax_optimizer.py): Uses `Jax` and `Optax` to perform gradient-based optimization of the phase masks with multiple restarts to minimize the infidelity with respect to a target unitary. This algorithm can run efficiently on CPU or GPU and is significantly faster than the SciPy-based implementation.
+- [`jax_optimizer`](src/phaseshift/optimization/jax_optimizer.py): Uses `Jax` and `Optax` to perform gradient-based optimization of the phase masks with multiple restarts to minimize the infidelity or the geodesic distance [(Álvarez-Vizoso *et al.*)](
+https://doi.org/10.48550/arXiv.2510.19397
+) with respect to a target unitary. This algorithm can run efficiently on CPU or GPU and is significantly faster than the SciPy-based implementation.
 
 ---
 **Note:** For more detailed descriptions and usage examples, see the documentation of the individual modules.

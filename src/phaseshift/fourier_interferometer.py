@@ -17,12 +17,15 @@
 
 This module implements the Fourier decomposition and the compact Fourier decomposition of a unitary matrix,
 allowing it to be expressed exactly as a product of 4N+1 or 2N+5 phase masks interleaved with discrete Fourier transform
-(DFT) matrices.
+(DFT) matrices. The algorithm is described in [1].
 
 The module consists of the following main functions:
     - `fourier_decomposition`: Decompose a unitary matrix exactly into a sequence of 4N + 1 phase masks interleaved with DFT matrices.
     - `compact_fourier_decomposition`: Decompose a unitary matrix exactly into a sequence of 2N + 5 phase masks interleaved with DFT matrices.
     - `circuit_reconstruction`: Reconstructs a unitary matrix from its Fourier decomposition.
+
+### References:
+    [1]: Vincent Girouard and Nicolás Quesada, "Near-optimal decomposition of unitary matrices using phase masks and the discrete Fourier transform," J. Opt. Soc. Am. B 43, A66-A73 (2026)
 """
 
 from typing import NamedTuple

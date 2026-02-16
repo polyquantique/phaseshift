@@ -22,10 +22,14 @@ restarts to find the best set of parameters. The module consists of the followin
 
 - `forward_product`: Computes the forward product of the network given a sequence of phase masks and a mixing layer.
 - `infidelity_loss_function`: Computes the infidelity loss function between the target unitary and the approximated unitary.
-- `geodesic_distance`: Computes the geodesic distance between the target unitary and the approximated unitary.
+- `geodesic_distance`: Computes the geodesic distance between the target unitary and the approximated unitary [1].
 - `adam_run`: Runs the Adam optimizer for a given number of steps to optimize the angles in the phase masks.
 - `jax_mask_optimizer`: Main function to optimize the phase masks to approximate a target unitary matrix.
 - `scipy_mask_optimizer`: Similar to `jax_mask_optimizer`, but uses the BFGS algorithm from SciPy for optimization.
+
+### References:
+
+[1] Álvarez-Vizoso, Javier, and David Barral. "Universality and Optimal Architectures for Layered Programmable Unitary Decompositions." arXiv preprint arXiv:2510.19397 (2025).
 """
 
 from functools import partial
