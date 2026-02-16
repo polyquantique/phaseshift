@@ -199,7 +199,9 @@ def test_jax_mask_optimizer_invalid_cost_function():
     U = unitary_group(4, 42).rvs()
 
     # Attempt to run the optimizer with an invalid cost function
-    with pytest.raises(ValueError, match="Invalid cost function: invalid_cost. Must be 'infidelity' or 'geodesic'."):
+    with pytest.raises(
+        ValueError, match="Invalid cost function: invalid_cost. Must be 'infidelity' or 'geodesic'."
+    ):
         jax_opt.jax_mask_optimizer(U, 5, steps=1000, restarts=25, cost_function="invalid_cost")
 
 
