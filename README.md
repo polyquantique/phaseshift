@@ -1,4 +1,4 @@
-[![a](https://img.shields.io/static/v1?label=arXiv&message=2508.20010&color=active&style=flat-square)](https://arxiv.org/abs/arXiv:2508.20010)
+[![Paper](https://img.shields.io/badge/Paper-Read%20Article-blue)](https://doi.org/10.1364/JOSAB.577579)
 
 # PhaseShift
 
