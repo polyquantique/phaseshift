@@ -257,7 +257,7 @@ def jax_mask_optimizer(
         cost_fun = infidelity_loss_function
     else:
         raise ValueError(
-            f"Invalid cost function: {cost_function}. Must be 'infidelity' or 'geodesic_distance'."
+            f"Invalid cost function: {cost_function}. Must be 'infidelity' or 'geodesic'."
         )
 
     # Extract the indices of the phase shifters from the mask shape

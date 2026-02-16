@@ -73,6 +73,33 @@ def test_infidelity_loss_function(dim: int) -> None:
     assert (infidelity > 0) and (infidelity <= 1.0)
 
 
+@pytest.mark.parametrize("dim", range(2, 10, 2))
+def test_geodesic_distance(dim: int) -> None:
+    """Test the geodesic distance function."""
+
+    # Generate a random mask sequence
+    angles = np.stack([np.random.uniform(0, 2 * np.pi, dim) for _ in range(dim + 1)])
+    masks = np.exp(1j * angles)
+
+    # Set up the mixing layer as a DFT matrix
+    F = dft(dim, scale="sqrtn")
+
+    # Place phase shifters everywhere
+    ps_indices = np.arange(dim)
+
+    # Compute the forward product
+    U = jax_opt.forward_product(masks, F)
+
+    # The geodesic distance should be zero when the target unitary is the same as the computed one
+    geo_dist = jax_opt.geodesic_distance(angles, F, U, ps_indices)
+    assert np.isclose(geo_dist, 0.0, rtol=1e-12)
+
+    # The geodesic distance should be positive for a different target unitary
+    V = unitary_group(dim, 42).rvs()
+    geo_dist = jax_opt.geodesic_distance(angles, F, V, ps_indices)
+    assert geo_dist > 0.0
+
+
 @pytest.mark.parametrize("dim", [2, 5, 8])
 def test_jax_mask_optimizer_default(dim: int):
     """Test the JAX mask optimizer with default parameters for random unitary matrices."""
@@ -85,6 +112,21 @@ def test_jax_mask_optimizer_default(dim: int):
 
     # Check that the infidelity is within a reasonable range
     assert infidelity < 1e-7
+
+
+@pytest.mark.parametrize("dim", [2, 5, 8])
+def test_jax_optimizer_geodesic_distance(dim: int) -> None:
+    """Test the JAX mask optimizer using the geodesic distance as the cost function."""
+
+    # Generate a random unitary matrix
+    U = unitary_group(dim, 42).rvs()
+
+    # Run the optimizer using the geodesic distance as the cost function
+    decomp, geo_dist = jax_opt.jax_mask_optimizer(
+        U, dim + 1, steps=3000, restarts=25, cost_function="geodesic", learning_rate=1
+    )
+
+    assert geo_dist < 1e-7
 
 
 def test_jax_mask_optimizer_custom_mixing_layer():
@@ -148,6 +190,17 @@ def test_jax_mask_optimizer_custom_phase_masks():
     # Check that the phase masks are correctly set to 1 at the specified indices
     for i in zero_indices:
         assert np.allclose(mask_sequence[:, i], np.ones(11))
+
+
+def test_jax_mask_optimizer_invalid_cost_function():
+    """Test that the JAX mask optimizer raises a ValueError for an invalid cost function."""
+
+    # Generate a random unitary matrix
+    U = unitary_group(4, 42).rvs()
+
+    # Attempt to run the optimizer with an invalid cost function
+    with pytest.raises(ValueError, match="Invalid cost function: invalid_cost. Must be 'infidelity' or 'geodesic'."):
+        jax_opt.jax_mask_optimizer(U, 5, steps=1000, restarts=25, cost_function="invalid_cost")
 
 
 @pytest.mark.parametrize("dim", [2, 5, 8])
