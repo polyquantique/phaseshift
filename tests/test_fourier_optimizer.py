@@ -16,9 +16,9 @@ import numpy as np
 import pytest
 from scipy.stats import unitary_group
 
-from unitary_decomp.fourier_interferometer import circuit_reconstruction
-from unitary_decomp.matrix_operations import matrix_interleave
-from unitary_decomp.optimization.fourier_optimizer import fidelity, mask_optimizer
+from phaseshift.fourier_interferometer import circuit_reconstruction
+from phaseshift.matrix_operations import matrix_interleave
+from phaseshift.optimization.fourier_optimizer import fidelity, mask_optimizer
 
 """Unit tests for the `fourier_optimizer` module."""
 

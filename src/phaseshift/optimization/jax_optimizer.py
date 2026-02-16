@@ -16,19 +16,24 @@
 # JAX Optimizer
 
 This module provides functions to optimize a sequence of phase masks to approximate a target unitary matrix using JAX.
-The linear interferometer is modeled as a neural network which is trained to learn a target unitary matrix by
-adjusting the phase masks. The optimization is performed using the Adam optimizer with multiple restarts to find
-the best set of parameters. The module consists of the following main functions:
+The linear interferometer is modeled as a deep neural network which is trained to learn a target unitary matrix by
+adjusting the phase masks to minimize a cost function. The optimization is performed using the Adam optimizer with multiple
+restarts to find the best set of parameters. The module consists of the following main functions:
 
 - `forward_product`: Computes the forward product of the network given a sequence of phase masks and a mixing layer.
 - `infidelity_loss_function`: Computes the infidelity loss function between the target unitary and the approximated unitary.
+- `geodesic_distance`: Computes the geodesic distance between the target unitary and the approximated unitary [1].
 - `adam_run`: Runs the Adam optimizer for a given number of steps to optimize the angles in the phase masks.
 - `jax_mask_optimizer`: Main function to optimize the phase masks to approximate a target unitary matrix.
 - `scipy_mask_optimizer`: Similar to `jax_mask_optimizer`, but uses the BFGS algorithm from SciPy for optimization.
+
+### References:
+
+[1] Álvarez-Vizoso, Javier, and David Barral. "Universality and Optimal Architectures for Layered Programmable Unitary Decompositions." arXiv preprint arXiv:2510.19397 (2025).
 """
 
 from functools import partial
-from typing import Optional
+from typing import Callable, Optional
 
 import jax
 import jax.numpy as jnp
@@ -36,7 +41,7 @@ import optax
 from jax.scipy.optimize import minimize
 from scipy.linalg import dft
 
-from unitary_decomp.fourier_interferometer import FourierDecomp
+from phaseshift.fourier_interferometer import FourierDecomp
 
 # Enable 64-bit precision for JAX operations
 jax.config.update("jax_enable_x64", True)
@@ -45,7 +50,7 @@ jax.config.update("jax_enable_x64", True)
 def forward_product(mask_sequence: jax.Array, mixing_layer: jax.Array) -> jax.Array:
     """Compute the forward product of the network.
 
-    Given a sequence of phase masks and a mixing layer, this function computes the product the phase masks
+    Given a sequence of phase masks and a mixing layer, this function computes the product of the phase masks
     and mixing layers in an alternating fashion. This function serves as the forward pass of the
     network.
 
@@ -103,7 +108,47 @@ def infidelity_loss_function(
     return 1 - fidelity
 
 
-@partial(jax.jit, static_argnames=["steps", "lr"])
+def geodesic_distance(
+    angles: jax.Array, mixing_layer: jax.Array, U: jax.Array, ps_indices: jax.Array
+) -> jax.Array:
+    """Compute the geodesic distance between two unitary matrices.
+
+    Given a set of angles and a mixing layer, this function computes the geodesic distance between the
+    target unitary `U` and the unitary obtained from the forward product of the network corresponding to the angles.
+
+    The geodesic distance is defined in [1]. It is a measure of the true distance in the curved space of SU(N).
+
+    Args:
+        angles (jax.Array): (L, N) array of angles, where L is the number of phase masks in the network and N is the dimension of the unitary.
+        mixing_layer (jax.Array): (N, N) array representing the mixing layer.
+        U (jax.Array): (N, N) array representing the target unitary matrix.
+        ps_indices (jax.Array): Array of indices where phase shifters are located in the phase masks. If there are phase shifters on all N channels, `ps_indices = jnp.arange(N)`.
+
+    Returns:
+        float: Geodesic distance between the target unitary and the approximated unitary.
+
+    ### References:
+        [1] Álvarez-Vizoso, Javier, and David Barral. "Universality and Optimal Architectures for Layered Programmable Unitary Decompositions." arXiv preprint arXiv:2510.19397 (2025).
+    """
+    # Dimension of the unitary
+    dim = U.shape[0]
+
+    # Construct the phase masks from the angles and the mask shape
+    angles = angles.reshape(-1, ps_indices.size)
+    mask_sequence = jnp.ones((angles.shape[0], dim), dtype=jnp.complex128)
+    mask_sequence = mask_sequence.at[:, ps_indices].set(jnp.exp(1.0j * angles))
+
+    # Compute the forward product for the given mask sequence
+    U_approx = forward_product(mask_sequence, mixing_layer)
+
+    # Compute the geodesic distance between the target unitary and the approximated unitary
+    omega = U_approx.conj().T @ U
+    geodesic_distance = jnp.sum(jnp.angle(jnp.linalg.eigvals(omega)) ** 2)
+
+    return geodesic_distance
+
+
+@partial(jax.jit, static_argnames=["steps", "lr", "cost_function"])
 def adam_run(
     init_angles: jax.Array,
     mixing_layer: jax.Array,
@@ -111,12 +156,12 @@ def adam_run(
     ps_indices: jax.Array,
     steps: int,
     lr: float,
+    cost_function: Callable[..., jax.Array],
 ) -> tuple[jax.Array, jax.Array]:
     """Run the Adam optimizer for a given number of steps.
 
     Given initial angles, a mixing layer, and a target unitary matrix, this function runs the Adam optimizer
-    for a specified number of steps to optimize the angles such that the infidelity between the target
-    unitary and the approximated unitary is minimized.
+    for a specified number of steps to optimize the angles such that the cost function is minimized.
 
     Args:
         init_angles (jax.Array): Initial angles in the phase masks.
@@ -125,42 +170,43 @@ def adam_run(
         ps_indices (jax.Array): Locations of the phase shifters in the phase masks.
         steps (int): Number of optimization steps to perform.
         lr (float): Learning rate for the optimizer.
+        cost_function (Callable): Cost function to be minimized.
 
     Returns:
-        tuple: Optimized parameters and infidelity after optimization.
+        tuple: Optimized parameters and cost function after optimization.
     """
     # Initialize parameters and optimizer
     angles = init_angles
     opt = optax.adam(lr)
     opt_state = opt.init(angles)
-    best_config = (angles, 1.0)
+    best_config = (angles, jnp.inf)
 
     def _opt_step(state, _):
         """Single optimization step."""
-        angles, opt_state, (best_angle, best_inf) = state
+        angles, opt_state, (best_angle, best_cost) = state
 
-        # Compute the gradient of the infidelity loss function with respect to the angles
-        infidelity, grads = jax.value_and_grad(infidelity_loss_function, argnums=0)(
+        # Compute the gradient of the cost function with respect to the angles
+        cost, grads = jax.value_and_grad(cost_function, argnums=0)(
             angles, mixing_layer, U, ps_indices
         )
 
-        # Check if the new infidelity is better than the best found so far
-        is_better = (infidelity < best_inf) & (infidelity > 0.0)
-        best_inf = jnp.where(is_better, infidelity, best_inf)
+        # Check if the new cost is better than the best found so far
+        is_better = (cost < best_cost) & (cost > 0.0)
+        best_cost = jnp.where(is_better, cost, best_cost)
         best_angle = jnp.where(is_better, angles, best_angle)
 
         # Update the parameters using the optimizer
         updates, opt_state = opt.update(grads, opt_state, angles)
         angles = optax.apply_updates(angles, updates)
 
-        return (angles, opt_state, (best_angle, best_inf)), None
+        return (angles, opt_state, (best_angle, best_cost)), None
 
     # Run the optimization for the specified number of steps
-    (_, _, (final_angles, infidelity)), _ = jax.lax.scan(
+    (_, _, (final_angles, cost)), _ = jax.lax.scan(
         _opt_step, (angles, opt_state, best_config), None, length=steps
     )
 
-    return final_angles, infidelity
+    return final_angles, cost
 
 
 def jax_mask_optimizer(
@@ -171,6 +217,7 @@ def jax_mask_optimizer(
     steps: int = 3000,
     restarts: int = 200,
     learning_rate: float = 1e-2,
+    cost_function: str = "infidelity",
 ) -> tuple[FourierDecomp, float]:
     """Optimize the phase masks to approximate a target unitary matrix.
 
@@ -184,15 +231,18 @@ def jax_mask_optimizer(
     Args:
         U (jax.Array): Target unitary matrix to approximate.
         length (int): Number of phase masks in the circuit.
-        mixing_layer (jax.Array): Mixing layer to place between phase masks. If None, the DFT matrix is used.
-        mask_shape (jax.Array): Boolean array indicating where phase shifters are located in the phase masks.
+        mixing_layer (jax.Array, optional): Mixing layer to place between phase masks. If None, the DFT matrix is used.
+        mask_shape (jax.Array, optional): Boolean array indicating where phase shifters are located in the phase masks.
             True indicates the presence of a phase shifter, False indicates no phase shifter. If None, a full mask (all True) is used.
-        steps (int, optional): Number of optimization steps to perform for each restart. Default is 2000.
+        steps (int, optional): Number of optimization steps to perform for each restart. Default is 3000.
         restarts (int, optional): Number of restarts for the optimization. Default is 200.
-        learning_rate (float, optional): Learning rate for the Adam optimizer. Default is 1e-2.
+        learning_rate (float, optional): Learning rate for the Adam optimizer. Default is 1e-2. 
+            Should be increased when using the geodesic distance as cost function.
+        cost_function (str, optional): Cost function to minimize during optimization. Default is the `infidelity`.
+            Can be set to `geodesic_distance` for an alternative cost function.
 
     Returns:
-        (FourierDecomp, float): A tuple containing the optimized FourierDecomp object and the corresponding infidelity.
+        (FourierDecomp, float): A tuple containing the optimized FourierDecomp object and the corresponding cost.
     """
 
     # Dimension of the unitary
@@ -205,6 +255,15 @@ def jax_mask_optimizer(
     # If no mask shape is provided, use a full mask (all True)
     if mask_shape is None:
         mask_shape = jnp.array([True] * dim)
+
+    if cost_function == "geodesic":
+        cost_fun = geodesic_distance
+    elif cost_function == "infidelity":
+        cost_fun = infidelity_loss_function
+    else:
+        raise ValueError(
+            f"Invalid cost function: {cost_function}. Must be 'infidelity' or 'geodesic'."
+        )
 
     # Extract the indices of the phase shifters from the mask shape
     ps_indices = jnp.nonzero(mask_shape)[0]
@@ -222,9 +281,9 @@ def jax_mask_optimizer(
     )
 
     # Run the Adam optimizer for each set of initial parameters
-    angles, infidelities = jax.vmap(
+    angles, costs = jax.vmap(
         adam_run,
-        in_axes=(0, None, None, None, None, None),
+        in_axes=(0, None, None, None, None, None, None),
     )(
         init_params,
         mixing_layer,
@@ -232,15 +291,16 @@ def jax_mask_optimizer(
         ps_indices,
         steps,
         learning_rate,
+        cost_fun,
     )
 
-    # Find the best parameters and corresponding infidelity
-    best_index = jnp.argmin(infidelities)
+    # Find the best parameters and corresponding cost
+    best_index = jnp.argmin(costs)
     mask_sequence = jnp.ones((length, dim), dtype=jnp.complex128)
     mask_sequence = mask_sequence.at[:, ps_indices].set(jnp.exp(1.0j * angles[best_index]))
-    best_infidelity = infidelities[best_index]
+    best_cost = costs[best_index]
 
-    return FourierDecomp(mask_sequence[0], mask_sequence[1:]), best_infidelity
+    return FourierDecomp(mask_sequence[0], mask_sequence[1:]), best_cost
 
 
 def scipy_mask_optimizer(

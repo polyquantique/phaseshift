@@ -12,7 +12,7 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 
-"""# Unitary Decompositions
+"""# PhaseShift
 
 This package provides functions to decompose and approximate linear optical transformations into various interferometer configurations.
 
@@ -28,17 +28,14 @@ The available decompositions include:
 
 For more details on each decomposition, refer to the respective module documentation.
 
-`Unitary-Decomp` also includes optimization routines in the `optimization` subpackage to find approximated decompositions using gradient-based methods.
+`PhaseShift` also includes optimization routines in the `optimization` subpackage to find approximated decompositions using gradient-based methods.
 """
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 
-from unitary_decomp.bell_interferometer import bell_decomposition
-from unitary_decomp.clements_interferometer import clements_decomposition, mzi_decomposition
-from unitary_decomp.fourier_interferometer import (
-    compact_fourier_decomposition,
-    fourier_decomposition,
-)
-from unitary_decomp.lplm_interferometer import lplm_decomposition
-from unitary_decomp.optimization.fourier_optimizer import mask_optimizer
-from unitary_decomp.optimization.jax_optimizer import jax_mask_optimizer
+from phaseshift.bell_interferometer import bell_decomposition
+from phaseshift.clements_interferometer import clements_decomposition, mzi_decomposition
+from phaseshift.fourier_interferometer import compact_fourier_decomposition, fourier_decomposition
+from phaseshift.lplm_interferometer import lplm_decomposition
+from phaseshift.optimization.fourier_optimizer import mask_optimizer
+from phaseshift.optimization.jax_optimizer import jax_mask_optimizer
