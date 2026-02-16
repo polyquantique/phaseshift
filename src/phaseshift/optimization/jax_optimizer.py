@@ -236,7 +236,8 @@ def jax_mask_optimizer(
             True indicates the presence of a phase shifter, False indicates no phase shifter. If None, a full mask (all True) is used.
         steps (int, optional): Number of optimization steps to perform for each restart. Default is 3000.
         restarts (int, optional): Number of restarts for the optimization. Default is 200.
-        learning_rate (float, optional): Learning rate for the Adam optimizer. Default is 1e-2.
+        learning_rate (float, optional): Learning rate for the Adam optimizer. Default is 1e-2. 
+            Should be increased when using the geodesic distance as cost function.
         cost_function (str, optional): Cost function to minimize during optimization. Default is the `infidelity`.
             Can be set to `geodesic_distance` for an alternative cost function.
 
