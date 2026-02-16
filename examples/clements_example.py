@@ -18,7 +18,7 @@ Sample code to demonstrate the use of the Clements Interferometer module.
 
 import numpy as np
 
-from unitary_decomp.clements_interferometer import circuit_reconstruction, clements_decomposition
+from phaseshift.clements_interferometer import circuit_reconstruction, clements_decomposition
 
 # Example unitary matrix (U = H \otimes H)
 U = 1 / 2 * np.array([[1, 1, 1, 1], [1, -1, 1, -1], [1, 1, -1, -1], [1, -1, -1, 1]])

@@ -17,8 +17,8 @@ import pytest
 from scipy.linalg import dft
 from scipy.stats import unitary_group
 
-import unitary_decomp.optimization.jax_optimizer as jax_opt
-from unitary_decomp.fourier_interferometer import FourierDecomp, circuit_reconstruction
+import phaseshift.optimization.jax_optimizer as jax_opt
+from phaseshift.fourier_interferometer import FourierDecomp, circuit_reconstruction
 
 np.random.seed(42)
 

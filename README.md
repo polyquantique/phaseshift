@@ -1,6 +1,6 @@
 [![a](https://img.shields.io/static/v1?label=arXiv&message=2508.20010&color=active&style=flat-square)](https://arxiv.org/abs/arXiv:2508.20010)
 
-# Unitary-Decomp
+# PhaseShift
 
 Decomposition and approximation tools for linear optical unitaries.
 
@@ -17,7 +17,7 @@ Decomposition and approximation tools for linear optical unitaries.
 
 ## About This Project
 
-`Unitary-Decomp` is a **Python** package for performing various **decompositions** and **approximations** of unitary matrices into planar arrangements of simple optical components. These tools can be used to design and program **universal multiport interferometers** (UMIs), devices capable of implementing arbitrary linear transformations on multiple optical modes. Such devices have numerous applications in communication, imaging, and information processing.
+`PhaseShift` is a **Python** package for performing various **decompositions** and **approximations** of unitary matrices into planar arrangements of simple optical components. These tools can be used to design and program **universal multiport interferometers** (UMIs), devices capable of implementing arbitrary linear transformations on multiple optical modes. Such devices have numerous applications in communication, imaging, and information processing.
 
 The algorithms implemented in this package cover two main classes of planar UMI architectures: 
 - [Networks of two-mode components](#two-mode-component-networks) 
@@ -44,33 +44,33 @@ Sequence of phase masks interleaved with the discrete Fourier transform mixing l
 ![Fourier design](figures/Fourier.svg)
 
 ## Package Contents
-`Unitary-Decomp` provides tools to perform **exact decompositions** and **numerical approximations** of unitary matrices.
+`PhaseShift` provides tools to perform **exact decompositions** and **numerical approximations** of unitary matrices.
 
 ### Exact Decompositions
-`Unitary-Decomp` includes four main modules to perform exact decompositions of unitary matrices:
+`PhaseShift` includes four main modules to perform exact decompositions of unitary matrices:
 
-- [`clements_interferometer`](src/unitary_decomp/clements_interferometer.py): Implementation of the algorithm by [Clements *et al.*, 2016](https://doi.org/10.1364/OPTICA.3.001460) to decompose $N \times N$ unitary matrices into a rectangular mesh of $N(N-1)/2$ **asymmetric** Mach–Zehnder interferometers.
+- [`clements_interferometer`](src/phaseshift/clements_interferometer.py): Implementation of the algorithm by [Clements *et al.*, 2016](https://doi.org/10.1364/OPTICA.3.001460) to decompose $N \times N$ unitary matrices into a rectangular mesh of $N(N-1)/2$ **asymmetric** Mach–Zehnder interferometers.
 
-- [`bell_interferometer`](src/unitary_decomp/bell_interferometer.py): Implementation of the algorithm by [Bell *et al.*, 2021](https://doi.org/10.1063/5.0053421) to decompose $N \times N$ unitary matrices into a rectangular mesh of $N(N-1)/2$ **symmetric** Mach–Zehnder interferometers.
+- [`bell_interferometer`](src/phaseshift/bell_interferometer.py): Implementation of the algorithm by [Bell *et al.*, 2021](https://doi.org/10.1063/5.0053421) to decompose $N \times N$ unitary matrices into a rectangular mesh of $N(N-1)/2$ **symmetric** Mach–Zehnder interferometers.
 
-- [`lplm_interferometer`](src/unitary_decomp/lplm_interferometer.py): Implementation of the algorithm by [López Pastor *et al.*, 2021](https://doi.org/10.1364/OE.432787) to decompose $N \times N$ unitary matrices into a sequence of $6N+1$ phase masks interleaved with the **DFT** matrix.
+- [`lplm_interferometer`](src/phaseshift/lplm_interferometer.py): Implementation of the algorithm by [López Pastor *et al.*, 2021](https://doi.org/10.1364/OE.432787) to decompose $N \times N$ unitary matrices into a sequence of $6N+1$ phase masks interleaved with the **DFT** matrix.
 
-- [`fourier_interferometer`](src/unitary_decomp/fourier_interferometer.py): Implementation of the **Fourier decomposition** and the **compact Fourier decomposition** to decompose $N \times N$ unitary matrices into sequences of $4N+1$ and $2N+5$ phase masks interleaved with **DFT** respectively.
+- [`fourier_interferometer`](src/phaseshift/fourier_interferometer.py): Implementation of the **Fourier decomposition** and the **compact Fourier decomposition** to decompose $N \times N$ unitary matrices into sequences of $4N+1$ and $2N+5$ phase masks interleaved with **DFT** respectively.
 
 ### Optimization Tools
 
-In addition to exact decompositions, `Unitary-Decomp` also has an `optimization` subpackage, which contains tools to approximate unitary matrices into a sequence of phase masks interleaved with a chosen mixing layer. The `optimization` subpackage has two modules:
+In addition to exact decompositions, `PhaseShift` also has an `optimization` subpackage, which contains tools to approximate unitary matrices into a sequence of phase masks interleaved with a chosen mixing layer. The `optimization` subpackage has two modules:
 
-- [`fourier_optimizer`](src/unitary_decomp/optimization/fourier_optimizer.py): Uses the basin-hopping algorithm from `scipy.optimize` to solve a global minimization problem, yielding the sequence of phase masks that minimizes the infidelity with respect to a target unitary.
+- [`fourier_optimizer`](src/phaseshift/optimization/fourier_optimizer.py): Uses the basin-hopping algorithm from `scipy.optimize` to solve a global minimization problem, yielding the sequence of phase masks that minimizes the infidelity with respect to a target unitary.
 
-- [`jax_optimizer`](src/unitary_decomp/optimization/jax_optimizer.py): Uses `Jax` and `Optax` to perform gradient-based optimization of the phase masks with multiple restarts to minimize the infidelity with respect to a target unitary. This algorithm can run efficiently on CPU or GPU and is significantly faster than the SciPy-based implementation.
+- [`jax_optimizer`](src/phaseshift/optimization/jax_optimizer.py): Uses `Jax` and `Optax` to perform gradient-based optimization of the phase masks with multiple restarts to minimize the infidelity with respect to a target unitary. This algorithm can run efficiently on CPU or GPU and is significantly faster than the SciPy-based implementation.
 
 ---
 **Note:** For more detailed descriptions and usage examples, see the documentation of the individual modules.
 
 ## Installation
 
-You can install `Unitary-Decomp` from source as follows:
+You can install `PhaseShift` from source as follows:
 
 1. Clone the repository
 
@@ -127,7 +127,7 @@ pytest tests
 This first example shows how to use the `clements_interferometer` module to decompose a random unitary matrix.
 
 ```python
->>> from unitary_decomp import clements_interferometer as ci
+>>> from phaseshift import clements_interferometer as ci
 >>> from scipy.stats import unitary_group
 >>> import numpy as np
 ```
@@ -168,7 +168,7 @@ True
 This example shows how to use the `fourier_interferometer` module to decompose a random unitary matrix.
 
 ```python
->>> from unitary_decomp import fourier_interferometer as fi
+>>> from phaseshift import fourier_interferometer as fi
 >>> from scipy.stats import unitary_group
 >>> import numpy as np
 ```
@@ -212,7 +212,7 @@ True
 This example shows how to use the `jax_optimizer` module found in the `optimization` subpackage to find numerically a sequence of phase masks that approximate a given unitary matrix.
 
 ```python
->>> from unitary_decomp.optimize import jax_optimizer as jo
+>>> from phaseshift.optimize import jax_optimizer as jo
 >>> from scipy.stats import unitary_group
 >>> import numpy as np
 ```
@@ -244,7 +244,7 @@ The final matrix can be reconstructed using the `circuit_reconstruction` functio
 
 ## Documentation
 
-The **LPLM algorithm** found in the [`lplm_interferometer`](src/unitary_decomp/lplm_interferometer.py) module was adapted from [López Pastor *et al.*, 2021](https://doi.org/10.1364/OE.432787) and uses a slightly different sequence of phase masks than the original paper. A comprehensive derivation of this new sequence can be found in the following document:
+The **LPLM algorithm** found in the [`lplm_interferometer`](src/phaseshift/lplm_interferometer.py) module was adapted from [López Pastor *et al.*, 2021](https://doi.org/10.1364/OE.432787) and uses a slightly different sequence of phase masks than the original paper. A comprehensive derivation of this new sequence can be found in the following document:
 
 - [Decomposition of Unitary Matrices Using Fourier
 Transforms and Phase Masks](papers/LPLM_algorithm_derivation.pdf)
