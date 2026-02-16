@@ -17,7 +17,7 @@
 
 This module provides functions to optimize a sequence of phase masks to approximate a target unitary matrix using JAX.
 The linear interferometer is modeled as a deep neural network which is trained to learn a target unitary matrix by
-adjusting the phase masks to minimize a cost function. The optimization is performed using the Adam optimizer with multiple 
+adjusting the phase masks to minimize a cost function. The optimization is performed using the Adam optimizer with multiple
 restarts to find the best set of parameters. The module consists of the following main functions:
 
 - `forward_product`: Computes the forward product of the network given a sequence of phase masks and a mixing layer.
@@ -29,7 +29,7 @@ restarts to find the best set of parameters. The module consists of the followin
 """
 
 from functools import partial
-from typing import Optional, Callable
+from typing import Callable, Optional
 
 import jax
 import jax.numpy as jnp
@@ -104,7 +104,9 @@ def infidelity_loss_function(
     return 1 - fidelity
 
 
-def geodesic_distance(angles: jax.Array, mixing_layer: jax.Array, U: jax.Array, ps_indices: jax.Array) -> jax.Array:
+def geodesic_distance(
+    angles: jax.Array, mixing_layer: jax.Array, U: jax.Array, ps_indices: jax.Array
+) -> jax.Array:
     """Compute the geodesic distance between two unitary matrices.
 
     Given a set of angles and a mixing layer, this function computes the geodesic distance between the
@@ -137,7 +139,7 @@ def geodesic_distance(angles: jax.Array, mixing_layer: jax.Array, U: jax.Array, 
 
     # Compute the geodesic distance between the target unitary and the approximated unitary
     omega = U_approx.conj().T @ U
-    geodesic_distance = jnp.sum(jnp.angle(jnp.linalg.eigvals(omega))**2)
+    geodesic_distance = jnp.sum(jnp.angle(jnp.linalg.eigvals(omega)) ** 2)
 
     return geodesic_distance
 
@@ -231,7 +233,7 @@ def jax_mask_optimizer(
         steps (int, optional): Number of optimization steps to perform for each restart. Default is 3000.
         restarts (int, optional): Number of restarts for the optimization. Default is 200.
         learning_rate (float, optional): Learning rate for the Adam optimizer. Default is 1e-2.
-        cost_function (str, optional): Cost function to minimize during optimization. Default is the `infidelity`. 
+        cost_function (str, optional): Cost function to minimize during optimization. Default is the `infidelity`.
             Can be set to `geodesic_distance` for an alternative cost function.
 
     Returns:
@@ -254,7 +256,9 @@ def jax_mask_optimizer(
     elif cost_function == "infidelity":
         cost_fun = infidelity_loss_function
     else:
-        raise ValueError(f"Invalid cost function: {cost_function}. Must be 'infidelity' or 'geodesic_distance'.")
+        raise ValueError(
+            f"Invalid cost function: {cost_function}. Must be 'infidelity' or 'geodesic_distance'."
+        )
 
     # Extract the indices of the phase shifters from the mask shape
     ps_indices = jnp.nonzero(mask_shape)[0]
