@@ -77,8 +77,8 @@ You can install `PhaseShift` from source as follows:
 1. Clone the repository
 
 ```bash
-git clone https://github.com/polyquantique/Unitary-Decomp.git
-cd Unitary-Decomp
+git clone https://github.com/polyquantique/phaseshift.git
+cd phaseshift
 ```
 
 2. (Optional) Create and activate a virtual environment

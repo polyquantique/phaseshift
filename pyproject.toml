@@ -29,7 +29,7 @@ dev = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/polyquantique/Unitary-Decomp"
+Homepage = "https://github.com/polyquantique/phaseshift"
 
 [tool.setuptools.packages.find]
 where = ["src"]
