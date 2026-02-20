@@ -31,7 +31,7 @@ For more details on each decomposition, refer to the respective module documenta
 `PhaseShift` also includes optimization routines in the `optimization` subpackage to find approximated decompositions using gradient-based methods.
 """
 
-__version__ = "0.2.0"
+__version__ = "1.0.0"
 
 from phaseshift.bell_interferometer import bell_decomposition
 from phaseshift.clements_interferometer import clements_decomposition, mzi_decomposition
