@@ -30,7 +30,7 @@ This class of decompositions seeks to express an $N \times N$ unitary matrix as 
 Rectangular mesh of Mach–Zehnder interferometers based on the Clements architecture for 6 modes 
 </div>
 
-![Clements design](figures/Clements.svg)
+![Clements design](https://github.com/polyquantique/phaseshift/raw/main/figures/Clements.svg)
 
 
 ### Multichannel Component Sequences
@@ -41,7 +41,7 @@ This second class of decompositions aims to express an $N \times N$ unitary matr
 Sequence of phase masks interleaved with the discrete Fourier transform mixing layer for 6 modes
 </div>
 
-![Fourier design](figures/Fourier.svg)
+![Fourier design](https://github.com/polyquantique/phaseshift/raw/main/figures/Fourier.svg)
 
 ## Package Contents
 `PhaseShift` provides tools to perform **exact decompositions** and **numerical approximations** of unitary matrices.
@@ -71,6 +71,14 @@ https://doi.org/10.48550/arXiv.2510.19397
 **Note:** For more detailed descriptions and usage examples, see the documentation of the individual modules.
 
 ## Installation
+
+### Install from PyPI (recommended)
+
+```bash
+pip install phaseshift
+```
+
+### Install from source
 
 You can install `PhaseShift` from source as follows:
 
@@ -108,19 +116,18 @@ cd phaseshift
     ```bash
     pip install -e .[dev]
     ```
-    **Notes:**
-
-    For GPU support with JAX on Linux, install the appropriate CUDA-enabled version:
-
-```bash
-pip install "jax[cuda]" -f https://storage.googleapis.com/jax-releases/jax_cuda_releases.html
-```
 
 4. (Optional) Run the tests
 
 ```bash
 pip install pytest
 pytest tests
+```
+
+### Note
+For GPU support with JAX on Linux, install the appropriate CUDA-enabled version:
+```bash
+pip install "jax[cuda]" -f https://storage.googleapis.com/jax-releases/jax_cuda_releases.html
 ```
 
 ## Usage
@@ -249,7 +256,7 @@ The final matrix can be reconstructed using the `circuit_reconstruction` functio
 The **LPLM algorithm** found in the [`lplm_interferometer`](src/phaseshift/lplm_interferometer.py) module was adapted from [López Pastor *et al.*, 2021](https://doi.org/10.1364/OE.432787) and uses a slightly different sequence of phase masks than the original paper. A comprehensive derivation of this new sequence can be found in the following document:
 
 - [Decomposition of Unitary Matrices Using Fourier
-Transforms and Phase Masks](papers/LPLM_algorithm_derivation.pdf)
+Transforms and Phase Masks](https://github.com/polyquantique/phaseshift/raw/main/papers/LPLM_algorithm_derivation.pdf)
 
 ## Citing This Work
 If you find our research useful in your work, please cite it as
@@ -269,7 +276,7 @@ doi = {10.1364/JOSAB.577579}
 
 ## License
 
-This project is licensed under the Apache License 2.0. See the [LICENSE](LICENSE) file for details.
+This project is licensed under the Apache License 2.0. See the [LICENSE](https://github.com/polyquantique/phaseshift/blob/main/LICENSE) file for details.
 
 ## References
 
