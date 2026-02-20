@@ -9,3 +9,8 @@ The name of the package was changed to `PhaseShift` in preparation for the relea
 
 #### References
 - [1] Álvarez-Vizoso, Javier, and David Barral. "Universality and Optimal Architectures for Layered Programmable Unitary Decompositions." arXiv preprint arXiv:2510.19397 (2025).
+
+
+## [1.0.0] - 2026-02-16
+
+PhaseShift is now public on PyPi.
