@@ -446,6 +446,7 @@ def circuit_reconstruction(decomp: BellDecomp) -> NDArray[np.complex128]:
 
     return U
 
+
 def circuit_printer(decomp, width=30, rounding=3):
     """Print the circuit corresponding to the decomposition using qpic syntax.
 
@@ -465,7 +466,7 @@ def circuit_printer(decomp, width=30, rounding=3):
     dim = decomp.dim
     # Apply the phase shifters at the input
     for mode, phi in decomp.phi_input.items():
-        print(f"{mode} G ${round(phi/np.pi, rounding)}$ width={width}",file=output)
+        print(f"{mode} G ${round(phi/np.pi, rounding)}$ width={width}", file=output)
 
     # Iterate through the layers of the circuit
     for layer in range(dim):
@@ -473,14 +474,17 @@ def circuit_printer(decomp, width=30, rounding=3):
         for mode in range(layer % 2, dim - 1, 2):
             delta = round((decomp.delta[mode, layer] / np.pi) % 1, rounding)
             sigma = round((decomp.sigma[mode, layer] / np.pi) % 1, rounding)
-            print(f"{mode} {mode+1} G $\\genfrac{{}}{{}}{{0pt}}{{}}{{{delta}}}{{{sigma}}}$ width={width}",file=output)
+            print(
+                f"{mode} {mode+1} G $\\genfrac{{}}{{}}{{0pt}}{{}}{{{delta}}}{{{sigma}}}$ width={width}",
+                file=output,
+            )
         if (dim - 1, layer) in decomp.phi_edge:
-            phi_bottom = round((decomp.phi_edge[dim - 1, layer]/ np.pi) % 1, rounding)
-            print(f"{dim-1} G ${phi_bottom}$ width={width}",file=output)
+            phi_bottom = round((decomp.phi_edge[dim - 1, layer] / np.pi) % 1, rounding)
+            print(f"{dim-1} G ${phi_bottom}$ width={width}", file=output)
     # Apply the phase shifters at the output
     for mode, phi in decomp.phi_output.items():
-        phi = round((phi/ np.pi) % 1, rounding)
-        print(f"{mode} G ${phi}$ width={width}",file=output)
+        phi = round((phi / np.pi) % 1, rounding)
+        print(f"{mode} G ${phi}$ width={width}", file=output)
     captured_text = output.getvalue()
     output.close()
     return captured_text
