@@ -1,0 +1,43 @@
+name: tests
+on:
+  push:
+    branches: [master]
+  pull_request:
+
+jobs:
+  python-tests-pr:
+    name: python
+    if: github.event.pull_request.merged != true
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.4.1
+        with:
+          access_token: ${{ github.token }}
+
+      - name: Checkout phaseshift
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        shell: bash
+        run: |
+          pip install -r requirements.txt
+          pip install pytest-cov wheel codecov
+
+      - name: Install phaseshift
+        run: |
+          pip install -e .
+
+      - name: Run tests
+        run: python3 -m pytest tests/ --cov=src/phaseshift --cov-report term-missing --cov-report=html:coverage_html_report --cov-report=xml:coverage.xml
+
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
