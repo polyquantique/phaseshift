@@ -411,3 +411,6 @@ def matrix_interleave(
         output = output @ (mixing_layer * mask)
 
     return output
+
+def jx_matrix(n):
+    return
