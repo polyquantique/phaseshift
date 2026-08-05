@@ -35,7 +35,7 @@ jobs:
           pip install -e .
 
       - name: Run tests
-        run: python3 -m pytest src/phaseshift --cov=src/phaseshift --cov-report term-missing --cov-report=html:coverage_html_report --cov-report=xml:coverage.xml
+        run: python3 -m pytest phaseshift --cov=phaseshift --cov-report term-missing --cov-report=html:coverage_html_report --cov-report=xml:coverage.xml
 
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v5
